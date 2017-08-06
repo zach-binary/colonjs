@@ -10,7 +10,7 @@ const ApiBuilder = require('claudia-api-builder'),
 module.exports = api;
 
 api.post('/', (request) => {
-    const body = JSON.parse(request.rawBody);
+    const body = request.body;
     console.log(`Uploading ${body.fileName} to ${BUCKET_NAME}`);
 
     const putObject = S3.putObject({

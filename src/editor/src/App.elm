@@ -8,9 +8,6 @@ import Http exposing (..)
 import Json.Encode exposing (object, encode, string)
 import Json.Decode exposing (Decoder, field)
 
-
-
-
 ---- MODEL ----
 
 type alias Model =
@@ -37,8 +34,8 @@ slugify title =
 init : String -> ( Model, Cmd Msg )
 init path =
     ( { content = ""
-    , title = "new article" 
-    }, Cmd.none )
+    , title = "new-article.md" 
+    }, getPost path )
 
 
 
@@ -50,6 +47,8 @@ type Msg
     | ChangeTitle String
     | SavePost 
     | SavePostCompleted (Result Http.Error String)
+    | GetPost String
+    | GetPostCompleted (Result Http.Error String)
 
 savePost: Model -> Http.Request String
 savePost model =
@@ -69,6 +68,17 @@ savePostCmd: Model -> Cmd Msg
 savePostCmd model =
     Http.send SavePostCompleted (savePost model)
 
+getPost: String -> Cmd Msg
+getPost path =
+    let 
+        url =
+            "https://s3-us-west-2.amazonaws.com/colonjs" ++ path
+
+        request =
+            Http.getString url 
+
+    in
+        Http.send GetPostCompleted request
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -83,6 +93,15 @@ update msg model =
             ( model, savePostCmd model )
 
         SavePostCompleted result ->
+            ( model, Cmd.none )
+
+        GetPost path -> 
+            ( { model | title = path }, Cmd.none )
+
+        GetPostCompleted (Ok data) ->
+            ( { model | content = data }, Cmd.none )
+
+        GetPostCompleted (Err _) ->
             ( model, Cmd.none )
 
 
