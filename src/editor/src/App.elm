@@ -28,7 +28,7 @@ postDecoder =
 
 slugify: String -> String
 slugify title =
-    (String.join "-" (String.words title)) ++ ".md"
+    (String.join "-" (String.words title))
 
 
 init : String -> ( Model, Cmd Msg )
