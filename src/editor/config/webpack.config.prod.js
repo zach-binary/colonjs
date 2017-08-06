@@ -4,6 +4,7 @@ const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin')
 const getClientEnvironment = require('./env')
 const paths = require('../config/paths')
@@ -112,6 +113,10 @@ module.exports = {
 
   plugins: [
     new AssetsPlugin({path: paths.dist}),
+
+    new CopyWebpackPlugin([
+      { from: '_redirects' }
+    ]),
 
     new DefinePlugin(getClientEnvironment()),
 
