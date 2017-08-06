@@ -1,0 +1,11 @@
+{
+  "lambda": {
+    "role": "markdown-reducer-executor",
+    "name": "markdown-reducer",
+    "region": "us-west-2"
+  },
+  "api": {
+    "id": "7hsq3cvdp5",
+    "module": "lambda"
+  }
+}

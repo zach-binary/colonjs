@@ -41,5 +41,9 @@
     "url-loader": "0.5.8",
     "webpack": "2.3.3",
     "webpack-dev-server": "2.4.2"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.94.0",
+    "simplemde": "^1.11.2"
   }
 }
