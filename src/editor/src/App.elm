@@ -34,7 +34,7 @@ slugify title =
 init : String -> ( Model, Cmd Msg )
 init path =
     ( { content = ""
-    , title = "new-article.md" 
+    , title = if String.isEmpty path then "new-article.md" else path
     }, getPost path )
 
 
@@ -72,7 +72,7 @@ getPost: String -> Cmd Msg
 getPost path =
     let 
         url =
-            "https://s3-us-west-2.amazonaws.com/colonjs" ++ path
+            "https://s3-us-west-2.amazonaws.com/colonjs/" ++ path
 
         request =
             Http.getString url 

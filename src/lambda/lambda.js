@@ -17,6 +17,7 @@ api.post('/', (request) => {
         Bucket: BUCKET_NAME,
         Key: body.fileName,
         Body: body.markdown,
+        ACL: 'public-read',
     }).promise();
 
     return putObject.then((err, data) => {
