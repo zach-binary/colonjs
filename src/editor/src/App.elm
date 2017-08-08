@@ -134,7 +134,7 @@ view model =
             [ button [ onClick SavePost ] [ text "Save" ]
             ]
         , div [ class "preview" ]
-            [ a [ href (s3url "colonjs-site" (mdToHtmlExt model.title)) 
+            [ a [ href ("https://d7aall4bdz72z.cloudfront.net/" ++ (mdToHtmlExt model.title)) 
                 , target "_blank"
                 ] [ text "View Page" ]
             ]
