@@ -30,14 +30,25 @@ slugify: String -> String
 slugify title =
     (String.join "-" (String.words title))
 
+mdToHtmlExt: String -> String
+mdToHtmlExt path = 
+    String.split ".md" path
+        |> String.join ".html"
+
 
 init : String -> ( Model, Cmd Msg )
 init path =
-    ( { content = ""
-    , title = if String.isEmpty path then "new-article.md" else path
-    }, getPost path )
+    let 
+        actualPath =
+            if String.isEmpty path then "index.md" else path
+    in 
+        ( { content = ""
+        , title = actualPath
+        }, getPost actualPath )
 
-
+s3url: String -> String -> String
+s3url bucket file =
+    "https://s3-us-west-2.amazonaws.com/" ++ bucket ++ "/" ++ file
 
 ---- UPDATE ----
 
@@ -72,7 +83,7 @@ getPost: String -> Cmd Msg
 getPost path =
     let 
         url =
-            "https://s3-us-west-2.amazonaws.com/colonjs/" ++ path
+            s3url "colonjs" path
 
         request =
             Http.getString url 
@@ -121,6 +132,11 @@ view model =
             ]
         , div [ class "button-group" ] 
             [ button [ onClick SavePost ] [ text "Save" ]
+            ]
+        , div [ class "preview" ]
+            [ a [ href (s3url "colonjs-site" (mdToHtmlExt model.title)) 
+                , target "_blank"
+                ] [ text "View Page" ]
             ]
         ]
 
