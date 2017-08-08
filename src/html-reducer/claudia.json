@@ -1,0 +1,7 @@
+{
+  "lambda": {
+    "role": "html-reducer-executor",
+    "name": "html-reducer",
+    "region": "us-west-2"
+  }
+}
