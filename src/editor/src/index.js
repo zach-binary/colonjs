@@ -1,5 +1,4 @@
 import './main.css';
-
 const fileName = location.pathname.substr(1);
 
 const Elm = require('./App.elm');
