@@ -3,6 +3,7 @@
 const reducer = require('./reducer');
 const AWS = require('aws-sdk');
 const S3 = new AWS.S3();
+const CloudFront = new AWS.CloudFront();
 
 const updateHtmlObject = ({ fileName, contents }) => {
     return S3.putObject({
@@ -13,6 +14,18 @@ const updateHtmlObject = ({ fileName, contents }) => {
         ACL: 'public-read',
     }).promise();
 };
+
+const invalidateHtmlObject = (fileName) =>
+    CloudFront.createInvalidation({
+        DistributionId: 'EYTT8IXUJ5LIA',
+        InvalidationBatch: {
+            Paths: {
+                Items: [`/${fileName}`],
+                Quantity: 1,
+            },
+            CallerReference: new Date().getTime().toString(),
+        },
+    }).promise();
 
 exports.handler = function(event, context) {
     console.log('Processing updated object in s3');
@@ -28,12 +41,15 @@ exports.handler = function(event, context) {
         Key: s3.object.key
     }).promise();
 
+
+    let fileName;
     getUpdatedObject
         .then(result => reducer(result, s3.object.key))
-        .then(updateHtmlObject)
-        .catch(err => {
-            console.error(err);
-            context.fail();
+        .then(result => {
+            fileName = result.fileName;
+            updateHtmlObject(result);
         })
+        .then(result => invalidateHtmlObject(fileName))
+        .catch(context.fail)
         .then(() => context.done());
 };
